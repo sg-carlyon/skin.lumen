@@ -47,6 +47,15 @@ TILES = {
     "tvshows": ("#173a2e", f'''<rect x="226" y="62" width="150" height="100" rx="12" fill="#2f6b55"/><rect x="208" y="80" width="164" height="110" rx="13" fill="#4d8f76"/>
 <rect x="188" y="98" width="184" height="122" rx="14" fill="#e6f2ec"/><polygon points="262,132 262,186 306,159" fill="#173a2e"/>
 <text x="280" y="280" text-anchor="middle" font-family="{FONT}" font-weight="700" font-size="40" fill="#e6f2ec">TV Shows</text>'''),
+    "library": ("#1e2a44", f'''<circle cx="500" cy="300" r="190" fill="#24334f"/>
+<rect x="196" y="70" width="44" height="150" rx="8" fill="#7fa3d6"/>
+<rect x="248" y="70" width="44" height="150" rx="8" fill="#e8eef8"/>
+<rect x="300" y="84" width="44" height="136" rx="8" fill="#f5c46b" transform="rotate(12 322 220)"/>
+<line x1="186" y1="226" x2="374" y2="226" stroke="#e8eef8" stroke-width="8" stroke-linecap="round"/>
+<text x="280" y="282" text-anchor="middle" font-family="{FONT}" font-weight="700" font-size="40" fill="#e8eef8">My Library</text>'''),
+    "favourites": ("#33280f", f'''<circle cx="70" cy="300" r="190" fill="#3d3013"/>
+<path d="M280 62 L304 118 L364 123 L318 162 L332 221 L280 190 L228 221 L242 162 L196 123 L256 118 Z" fill="#f5c46b" stroke="#f5c46b" stroke-width="8" stroke-linejoin="round"/>
+<text x="280" y="282" text-anchor="middle" font-family="{FONT}" font-weight="700" font-size="40" fill="#f6ead0">Favourites</text>'''),
     "music": ("#34183a", f'''<circle cx="60" cy="40" r="170" fill="#401e47"/>
 <polygon points="250,86 340,68 340,96 250,114" fill="#f0dcf4"/>
 <line x1="256" y1="96" x2="256" y2="196" stroke="#f0dcf4" stroke-width="12"/><line x1="334" y1="80" x2="334" y2="180" stroke="#f0dcf4" stroke-width="12"/>
@@ -118,6 +127,15 @@ def main():
     shadow = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
     shadow.paste(rounded((W, H), R, (0, 0, 0, 200)), (120, 150))
     shadow.filter(ImageFilter.GaussianBlur(blur)).save(OUT / "tile-shadow.png", optimize=True)
+    # App glow: a soft white radial falloff that the skin tints with each tile's colour.
+    size = 512
+    glow = Image.new("RGBA", (size, size), (255, 255, 255, 0))
+    c = (size - 1) / 2
+    for y in range(size):
+        for x in range(size):
+            d = min(1.0, ((x - c) ** 2 + (y - c) ** 2) ** 0.5 / c)
+            glow.putpixel((x, y), (255, 255, 255, int(round(255 * (1 - d) ** 2.2))))
+    glow.save(OUT / "glow.png", optimize=True)
     print("textures done")
 
 

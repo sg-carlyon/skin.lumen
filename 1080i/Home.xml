@@ -22,9 +22,13 @@
     <onload condition="Skin.HasSetting(Home.FirstRun) + String.IsEmpty(Window(1198).Property(FirstStart))">$VAR[Action_FirstStart_HomeFocus]</onload>
     <onload condition="Skin.HasSetting(Home.FirstRun) + String.IsEmpty(Window(1198).Property(FirstStart))">SetProperty(FirstStart,True,1198)</onload>
 
+    <!-- Lumen: the app dashboard replaces the Arctic Fuse 3 home unless Lumen.ClassicHome is set. -->
+    <onload condition="!Skin.HasSetting(Lumen.ClassicHome)">SetFocus(9100)</onload>
+
     <controls>
-        <include content="Hub_Window">
+        <include content="Hub_Window" condition="Skin.HasSetting(Lumen.ClassicHome)">
             <param name="window">home</param>
         </include>
+        <include condition="!Skin.HasSetting(Lumen.ClassicHome)">Lumen_Dashboard</include>
     </controls>
 </window>

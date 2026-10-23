@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build release zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: skin.lumen
+      - name: Check tag matches addon.xml version
+        run: |
+          version=$(grep -oP '<addon[^>]*\sversion="\K[^"]+' skin.lumen/addon.xml)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match addon.xml version $version" >&2
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Build zip
+        run: |
+          zip -qr "skin.lumen-$VERSION.zip" skin.lumen \
+            -x 'skin.lumen/.git/*' 'skin.lumen/.github/*' 'skin.lumen/.gitattributes' 'skin.lumen/.gitignore'
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "skin.lumen-$VERSION.zip" \
+            --repo "$GITHUB_REPOSITORY" --title "Lumen $VERSION" --generate-notes

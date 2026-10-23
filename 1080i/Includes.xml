@@ -2,6 +2,7 @@
 <includes>
 
     <include file="Includes_Font.xml" />
+    <include file="Includes_Lumen_Dashboard.xml" />
 
     <include file="Includes_Constants_FlixArt_Large.xml" condition="Skin.String(Skin.FlixArt.Size,Large)" />
     <include file="Includes_Constants_FlixArt_ExtraLarge.xml" condition="Skin.String(Skin.FlixArt.Size,ExtraLarge)" />

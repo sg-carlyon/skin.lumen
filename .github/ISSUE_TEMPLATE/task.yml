@@ -1,0 +1,19 @@
+name: Task
+description: A piece of Lumen work (screen, feature, fix)
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be different when this is done?
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: How we'll know it's finished (screens to check, behaviour on the remote).
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
